@@ -32,11 +32,17 @@ unDistort()
 
 function MyEffects() {
   const { gl, scene, camera, size } = useThree()
-  const { Progress } = useControls({
+  const { Progress,Scale } = useControls({
     Progress: {
       value: settings.progress,
       min: 0,
       max: 1,
+      step: .1,
+    },
+    Scale: {
+      value: settings.scale,
+      min: 0,
+      max: 10,
       step: .1,
     },
   })
@@ -90,9 +96,9 @@ function MyEffects() {
 
             p += 0.1*cos(scale * 3.*p.yx + time + vec2(1.2,3.4));
             p += 0.1*cos(scale * 3.7*p.yx + 1.4* time + vec2(2.2,3.4));
-            // p += 0.1*cos(scale * 5.*p.yx + 2.6* time + vec2(4.2,3.4));
-            // p += 0.3*cos(scale * 7.*p.yx + 3.6* time + vec2(10.2,3.4));
-            // p += 0.9*cos(scale * 7.*p.yx + 3.6* time + vec2(10.2,3.4));
+            p += 0.1*cos(scale * 5.*p.yx + 2.6* time + vec2(4.2,3.4));
+             p += 0.1*cos(scale * 7.*p.yx + 3.6* time + vec2(10.2,3.4));
+            //  p += 0.2*cos(scale * 1.*p.yx + 1.6* time + vec2(10.2,3.4));
 
 
 
@@ -129,9 +135,9 @@ function MyEffects() {
           'tSize': { value: new THREE.Vector2( 256, 256 ) },
           'center': { value: new THREE.Vector2( 0.5, 0.5 ) },
           'angle': { value: 1.57 },
-              'time' : {value: 0},
+          'time' : {value: 0},
               'progress' : {value: Progress},
-              'scale' : {value: 2.0}
+              'scale' : {value: settings.scale}
       
         },
         vertexShader:vertex,
@@ -167,10 +173,10 @@ function MyEffects() {
 
   }, [data.delta])
   return useFrame((delta) => {
-    if(!toggle){
-      base.passes[1].uniforms.progress.value = THREE.MathUtils.damp(base.passes[1].uniforms.progress.value, data.delta*50, 4, .10)
+    base.passes[1].uniforms.scale.value = Scale    // if(!toggle){
+    //   base.passes[1].uniforms.progress.value = THREE.MathUtils.damp(base.passes[1].uniforms.progress.value, data.delta*50, 4, .10)
 
-    }
+    // }
     // base.passes[1].uniforms.progress.value = Progress
     gl.autoClear = false
     gl.clear()
@@ -253,11 +259,12 @@ export default function BoxesPage() {
  
   return (
     <>
-    <Canvas gl={{ antialias: false }} dpr={[1, 1.5]}>
-        {/* <color attach="background" args={['#ff0000']} /> */}
+    <Canvas gl={{ antialias: true }} dpr={[1, 1.5]}>
+        <color attach="background" args={['#ffffff']} />
         <Loader />
-        {/* {/* <ambientLight intensity={2} /> */}
-        <pointLight position={[40, 40, 40]} /> */}
+        <ambientLight intensity={1} /> 
+        {/* <fog /> */}
+        <pointLight position={[40, 40, 40]} /> 
         <Suspense fallback={null}>
         {/* <Wave /> */}
 
@@ -292,18 +299,18 @@ function Image(props) {
       group.current.position.y = THREE.MathUtils.damp(group.current.position.y, -2, 4, delta);
       group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -0.1, 4, delta);
     }else{
-      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, 0, 1, delta);
+      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -data.delta * 50, 1, delta);
       group.current.position.y = THREE.MathUtils.damp(group.current.position.y, -0.1, 4, delta);
       
     }
     group.current.position.z = THREE.MathUtils.damp(group.current.position.z, Math.max(0, data.delta * 100), 4, delta)
     // group.current.position.x -= 0.1
-    ref.current.material.grayscale = THREE.MathUtils.damp(
-      ref.current.material.grayscale,
-      Math.max(0, 1 - data.delta * 1000),
-      4,
-      delta
-    );
+    // ref.current.material.grayscale = THREE.MathUtils.damp(
+    //   ref.current.material.grayscale,
+    //   Math.max(0, data.delta * 500),
+    //   4,
+    //   delta
+    // );
   });
   return (
     <group ref={group}>
@@ -339,13 +346,13 @@ function Pages() {
   const y = 0
   return (
     <>
-      <Page position={[-width * 1, y, z]} urls={["./img/1.jpg", "./img/2.jpg", "./img/3.jpg"]} />
-      <Page position={[width * 0, y, z]} urls={["./img/4.jpg", "./img/5.jpg", "./img/6.jpg"]} />
-      <Page position={[width * 1, y, z]} urls={["./img/7.jpg", "./img/8.jpg", "./img/9.jpg"]} />
-      <Page position={[width * 2, y, z]} urls={["./img/1.jpg", "./img/2.jpg", "./img/3.jpg"]} />
-      <Page position={[width * 3, y, z]} urls={["./img/4.jpg", "./img/5.jpg", "./img/6.jpg"]} />
+      <Page position={[-width * 1, y, z]} urls={["./img1/1.jpg", "./img1/2.jpg", "./img1/3.jpg"]} />
+      <Page position={[width * 0, y, z]} urls={["./img1/4.jpg", "./img1/5.jpg", "./img1/6.jpg"]} />
+      <Page position={[width * 1, y, z]} urls={["./img1/7.jpg", "./img1/8.jpg", "./img1/9.jpg"]} />
+      <Page position={[width * 2, y, z]} urls={["./img1/1.jpg", "./img1/2.jpg", "./img1/3.jpg"]} />
+      <Page position={[width * 3, y, z]} urls={["./img1/4.jpg", "./img1/5.jpg", "./img1/6.jpg"]} />
      
-      <Page position={[width * 4, y, z]} urls={["./img/7.jpg", "./img/8.jpg", "./img/9.jpg"]} />
+      <Page position={[width * 4, y, z]} urls={["./img1/7.jpg", "./img1/8.jpg", "./img/9.jpg"]} />
       {/* <Page position={[width * 5, y, z]} urls={["./img/7.jpg", "./img/8.jpg", "./img/7.jpg"]} />
       <Page position={[width * 6, y, z]} urls={["./img/8.jpg", "./img/8.jpg", "./img/7.jpg"]} />
       <Page position={[width * 7, y, z]} urls={["./img/9.jpg", "./img/8.jpg", "./img/7.jpg"]} />
