@@ -1,7 +1,7 @@
 import { Suspense, useRef,useEffect,useMemo,useState } from 'react'
 import * as THREE from "three";
 import { Canvas, useThree, useFrame,useLoader,extend } from '@react-three/fiber'
-import {shaderMaterial, useScroll,ScrollControls, Scroll, Preload, Image as ImageImpl, OrbitControls,useTexture,MapControls,Html } from '@react-three/drei'
+import {shaderMaterial,Stars, useScroll,ScrollControls, Scroll, Preload, Image as ImageImpl, OrbitControls,useTexture,MapControls,Html } from '@react-three/drei'
 import Box from '../components/Image'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { CustomPass } from '../components/CustomPass.js';
@@ -15,11 +15,12 @@ import { DotScreenShader } from 'three/examples/jsm/shaders/DotScreenShader.js';
 import Handsfree from 'handsfree'
 import { useControls } from 'leva'
 import gsap from "gsap";
+import { ref } from 'valtio';
 
 
 const settings = {
   progress: 1,
-  scale: 0.3
+  scale: 3
 };
 function distort(){
   gsap.to(settings, {progress:0,duration:2})
@@ -180,79 +181,39 @@ function MyEffects() {
     // base.passes[1].uniforms.progress.value = Progress
     gl.autoClear = false
     gl.clear()
-    base.passes[1].uniforms.time.value += 0.01
+    base.passes[1].uniforms.time.value += 0.005
      base.render();
      //final.render();
   },1);
 }
 
-const WaveShaderMaterial = shaderMaterial(
-  // Uniform
-  {
-    uTime: 0,
-    uColor: new THREE.Color(21.0, 0.0, 0.0),
-    uTexture: new THREE.Texture()
-  },
-  // Vertex Shader
-  glsl`
-    precision mediump float;
+
+function BgStars(){
+  const { toggle } = useControls({ toggle: true })
+
+  const ref=useRef()
+  useFrame(()=>{
+    if(!toggle){
+      ref.current.rotation.y += 0.001
+      ref.current.rotation.x += 0.001
+      ref.current.rotation.z -= 0.001
+    }
+    
+
+
+  })
+
+  return(
+    <>
  
-    varying vec2 vUv;
-    varying float vWave;
+    <Stars ref={ref} radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
 
-    uniform float uTime;
+    </>
 
-    #pragma glslify: snoise3 = require(glsl-noise/simplex/3d.glsl);
+  
 
-    void main() {
-      vUv = uv;
-
-      vec3 pos = position;
-      float noiseFreq = 2.0;
-      float noiseAmp = 0.4;
-      vec3 noisePos = vec3(pos.x * noiseFreq + uTime, pos.y, pos.z);
-      pos.z += snoise3(noisePos) * noiseAmp;
-      vWave = pos.z;
-
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);  
-    }
-  `,
-  // Fragment Shader
-  glsl`
-    precision mediump float;
-
-    uniform vec3 uColor;
-    uniform float uTime;
-    uniform sampler2D uTexture;
-
-    varying vec2 vUv;
-    varying float vWave;
-
-    void main() {
-      float wave = vWave * 0.2;
-      vec3 texture = texture2D(uTexture, vUv + wave).rgb;
-      gl_FragColor = vec4(texture, 1.0); 
-    }
-  `
-);
-
-extend({ WaveShaderMaterial });
-
-const Wave = () => {
-  const ref = useRef();
-  useFrame(({ clock }) => (ref.current.uTime = clock.getElapsedTime()));
-
-  const [image] = useLoader(THREE.TextureLoader, [
-    "https://images.unsplash.com/photo-1635910162005-4a295b1bcca6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80"
-  ]);
-
-  return (
-    <mesh>
-      <planeBufferGeometry args={[0.4, 0.6, 16, 16]} />
-      <waveShaderMaterial uColor={"hotpink"} ref={ref} uTexture={image} />
-    </mesh>
-  );
-};
+  )
+}
 
 
 export default function BoxesPage() {
@@ -260,15 +221,13 @@ export default function BoxesPage() {
   return (
     <>
     <Canvas gl={{ antialias: true }} dpr={[1, 1.5]}>
-        <color attach="background" args={['#ffffff']} />
+        <color attach="background" args={['#666666']} />
         <Loader />
         <ambientLight intensity={1} /> 
-        {/* <fog /> */}
         <pointLight position={[40, 40, 40]} /> 
         <Suspense fallback={null}>
-        {/* <Wave /> */}
-
-          <ScrollControls visible infinite horizontal damping={4} pages={4} distance={1}>
+          <BgStars />
+          <ScrollControls visible infinite horizontal damping={1} pages={4} distance={1}>
               <Scroll>
                 <Pages />
 
@@ -291,15 +250,14 @@ function Image(props) {
   const { toggle } = useControls({ toggle: true })
 
   const ref = useRef();
-  const img = useRef()
   const group = useRef();
   const data = useScroll();
   useFrame((state, delta) => {
     if(toggle){
       group.current.position.y = THREE.MathUtils.damp(group.current.position.y, -2, 4, delta);
-      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -0.1, 4, delta);
+      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -1000 * data.delta, 4, delta);
     }else{
-      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -data.delta * 50, 1, delta);
+      group.current.rotation.z = THREE.MathUtils.damp(group.current.rotation.z, -data.delta * 50, 10, delta);
       group.current.position.y = THREE.MathUtils.damp(group.current.position.y, -0.1, 4, delta);
       
     }
@@ -324,13 +282,7 @@ function Page({ m = 0.4, urls, ...props }) {
 
   const { width } = useThree((state) => state.viewport);
   const w = width < 10 ? 1.5 / 3 : 1 / 3;
-  useFrame((state, delta) => {
-    if(img.current){
-       //img.current.rotation.z += .1
-       //img.current.position.y = Math.sin(delta * 10) -1 
 
-    }
-});
   return (
     <group {...props}ref={img}>
       <Image  position={[-width * w, 0, -1]} scale={[width * w - m * 2, 5, 1]} url={urls[0]} />
@@ -346,6 +298,7 @@ function Pages() {
   const y = 0
   return (
     <>
+
       <Page position={[-width * 1, y, z]} urls={["./img1/1.jpg", "./img1/2.jpg", "./img1/3.jpg"]} />
       <Page position={[width * 0, y, z]} urls={["./img1/4.jpg", "./img1/5.jpg", "./img1/6.jpg"]} />
       <Page position={[width * 1, y, z]} urls={["./img1/7.jpg", "./img1/8.jpg", "./img1/9.jpg"]} />
