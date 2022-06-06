@@ -221,7 +221,7 @@ export default function BoxesPage() {
   return (
     <>
     <Canvas gl={{ antialias: true }} dpr={[1, 1.5]}>
-        <color attach="background" args={['#666666']} />
+        <color attach="background" args={['#ffffff']} />
         <Loader />
         <ambientLight intensity={1} /> 
         <pointLight position={[40, 40, 40]} /> 
