@@ -349,7 +349,7 @@ function Pages() {
       <Page position={[width * 2, y, z]} urls={["./img1/1.jpg", "./img1/2.jpg", "./img1/3.jpg"]} />
       <Page position={[width * 3, y, z]} urls={["./img1/4.jpg", "./img1/5.jpg", "./img1/6.jpg"]} />
      
-      <Page position={[width * 4, y, z]} urls={["./img1/7.jpg", "./img1/8.jpg", "./img/9.jpg"]} />
+      <Page position={[width * 4, y, z]} urls={["./img1/7.jpg", "./img1/8.jpg", "./img1/9.jpg"]} />
       {/* <Page position={[width * 5, y, z]} urls={["./img/7.jpg", "./img/8.jpg", "./img/7.jpg"]} />
       <Page position={[width * 6, y, z]} urls={["./img/8.jpg", "./img/8.jpg", "./img/7.jpg"]} />
       <Page position={[width * 7, y, z]} urls={["./img/9.jpg", "./img/8.jpg", "./img/7.jpg"]} />
