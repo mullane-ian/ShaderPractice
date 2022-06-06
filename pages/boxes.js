@@ -226,7 +226,7 @@ export default function BoxesPage() {
         <ambientLight intensity={1} /> 
         <pointLight position={[40, 40, 40]} /> 
         <Suspense fallback={null}>
-          <BgStars />
+          {/* <BgStars /> */}
           <ScrollControls visible infinite horizontal damping={1} pages={4} distance={1}>
               <Scroll>
                 <Pages />
