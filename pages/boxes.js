@@ -44,7 +44,7 @@ function MyEffects() {
       value: settings.scale,
       min: 0,
       max: 10,
-      step: .1,
+      step: .2,
     },
   })
 
