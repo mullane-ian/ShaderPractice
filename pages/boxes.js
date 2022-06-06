@@ -157,7 +157,7 @@ function MyEffects() {
     final.setSize(size.width, size.height);
   }, [base, final, size])
 
-  const { toggle } = useControls({ toggle: true })
+  const { toggle } = useControls({ toggle: false })
   useEffect(()=>{
     if(toggle === true){
       gsap.to(base.passes[1].uniforms.progress, {value:1,duration:2})
@@ -189,7 +189,7 @@ function MyEffects() {
 
 
 function BgStars(){
-  const { toggle } = useControls({ toggle: true })
+  const { toggle } = useControls({ toggle: false })
 
   const ref=useRef()
   useFrame(()=>{
@@ -247,7 +247,7 @@ export default function BoxesPage() {
 
 
 function Image(props) {
-  const { toggle } = useControls({ toggle: true })
+  const { toggle } = useControls({ toggle: false })
 
   const ref = useRef();
   const group = useRef();
