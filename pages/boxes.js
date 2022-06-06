@@ -18,7 +18,7 @@ import gsap from "gsap";
 
 const settings = {
   progress: 1,
-  scale: 0.3
+  scale: 3
 };
 function distort(){
   gsap.to(settings, {progress:0,duration:2})
@@ -264,7 +264,6 @@ export default function BoxesPage() {
         <ambientLight intensity={1} /> 
         {/* <fog /> */}
         <pointLight position={[40, 40, 40]} /> 
-        <Suspense fallback={null}>
         {/* <Wave /> */}
 
           <ScrollControls visible infinite horizontal damping={4} pages={4} distance={1}>
@@ -277,7 +276,6 @@ export default function BoxesPage() {
           </ScrollControls>
 
           <Preload />
-        </Suspense>
       </Canvas>
     </>
   )
