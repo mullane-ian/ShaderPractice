@@ -329,11 +329,14 @@ function Page({ m = 0.4, urls, ...props }) {
     }
 });
   return (
+    <Suspense fallback={<h1>loading..</h1>}>
     <group {...props}ref={img}>
       <Image  position={[-width * w, 0, -1]} scale={[width * w - m * 2, 5, 1]} url={urls[0]} />
       <Image position={[0, 0, 0]} scale={[width * w - m * 2, 5, 1]} url={urls[1]} />
       <Image position={[width * w, 0, 1]} scale={[width * w - m * 2, 5, 1]} url={urls[2]} />
     </group>
+    </Suspense>
+
   );
 }
 
