@@ -12,7 +12,6 @@ import glsl from "babel-plugin-glsl/macro"; // <--- Module to import
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js';
 import { DotScreenShader } from 'three/examples/jsm/shaders/DotScreenShader.js';
 // Inside your app
-import Handsfree from 'handsfree'
 import { useControls } from 'leva'
 import gsap from "gsap";
 import { ref } from 'valtio';

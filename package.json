@@ -12,7 +12,6 @@
     "babel-plugin-glsl": "^1.0.0",
     "babel-plugin-macros": "^3.1.0",
     "gsap": "^3.10.4",
-    "handsfree": "^8.5.1",
     "leva": "^0.9.27",
     "lil-gui": "^0.16.1",
     "next": "latest",
