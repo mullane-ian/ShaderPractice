@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@babel/core": "^7.18.2",
+    "@react-three/drei": "9.3.4",
+    "@react-three/fiber": "8.0.10",
+    "babel-plugin-glsl": "^1.0.0",
+    "babel-plugin-macros": "^3.1.0",
+    "gsap": "^3.10.4",
+    "handsfree": "^8.5.1",
+    "leva": "^0.9.27",
+    "lil-gui": "^0.16.1",
+    "next": "latest",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-indiana-drag-scroll": "^2.1.0",
+    "three": "0.139.2",
+    "use-draggable-scroll": "^0.1.0",
+    "valtio": "^1.6.1"
+  }
+}
